@@ -1,6 +1,13 @@
 #include<bits/stdc++.h>
+#include<windows.h>
 using namespace std;
-
+COORD coord = {0, 0};
+void gotoxy (int x, int y)	
+{
+    coord.X = x;
+    coord.Y = y; 
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
 class user
 {
 public:
@@ -14,7 +21,7 @@ public:
 
     user()
     {
-        role ="3";
+        role ="1";
         temprole=role;
     }
 
@@ -40,6 +47,7 @@ class gov
         string cropname;
         string cropmsp;
         string cropid;
+        string tax;
 
         void gov_menu();
         void add_crop();
@@ -50,14 +58,95 @@ class gov
         void load_crop();
 };
 
-class pos
+class data
 {
     public:
-    string datapos;
-    string indexpath;
+     string n;
+     string m;
 };
 
-map<string,pos> crop;
+class userdata
+{
+    public:
+   string datapos;
+   string indexpos;
+};
+
+class apmcs
+{
+    public:
+        void apmc_menu();
+        void buycrop();
+};
+
+class displayuser
+{
+    public:
+    string phoneno;
+    string name;
+    string address;
+    string total_kg;
+    string no_crop;
+    string total_tax;
+    string income;
+
+    void user_menu(string);
+    void report(string);
+    void get_msp();
+    void load_user();
+
+};
+
+class userin
+{
+    public:
+      string kg;
+      string tax;
+      string income;
+
+      void userin_unpack(int);
+      void user_delete(int);
+
+};
+
+class transaction
+{
+    public:
+    string date;
+    string crop_name;
+    string price;
+    string crop_kg;
+    string income_tax;
+    string tax;
+    string income;
+
+
+};
+
+void trans_unpack(string id);
+
+void hedder()
+{
+    cout<<"\n\t\t\t\t\t***************************************************";
+	cout<<"\n\t\t\t\t\t*             APMC MANAGEMENT SYSTEM              *";
+	cout<<"\n\t\t\t\t\t***************************************************";   
+    cout<<endl;
+    cout<<endl;
+
+}
+
+void menu(string str)
+{
+		cout<<"\n\t\t\t\t\t\t++++++++++++ "<<str<<" ++++++++++++\n";
+
+}
+
+
+map<string,string> cropnamemap;
+map<string,string> cropidmap;
+map<string,data> totalcrop;
+map<string,userdata>trans_user;
+map<string,transaction>trans_crop;
 
 /* funcations of the use */
 void user::pack()
@@ -131,6 +220,8 @@ int user::isuser(string key1,string key2)
             int p = (key1==phoneno);
             int q = (key2==password);
 
+            cout<<role<<endl;
+
             if(p=q==1)
                 return stoi(role);
 
@@ -189,18 +280,26 @@ void user::signup()
 
 void user::signin()
 {
+    system("cls");
+    hedder();
+    menu("LOGIN MENU");
     string ph,pass;
-  cout<<"Enter the phone number\n";
+  cout<<"\n\n\t\t\t\t\t\t\tEnter the phone number:\n";
+   cout<<"\n\t\t\t\t\t\t\t   ";
   getline(cin,ph);
-  cout<<"Enter the Password\n";
+  cout<<"\n\t\t\t\t\t\t\tEnter the Password:\n";
+  cout<<"\n\t\t\t\t\t\t\t      ";
   getline(cin,pass);
 
   int isregisrter = search(ph);
 
   if(!isregisrter)
   {
-      cout<<"\n\n\t\t\t User is Not registred Yet";
-      cout<<"\n\n\t\t\t Press enter to register";
+          system("cls");
+    hedder();
+    menu("LOGIN MENU");
+      cout<<"\n\n\t\t\t\t\t\t       User is Not registred Yet";
+      cout<<"\n\n\t\t\t\t\t\t       Press enter to register....!";
       getchar();
   }
  int res = isuser(ph,pass);
@@ -208,14 +307,16 @@ void user::signin()
  if(res)
  {
      gov g;
+     apmcs a;
+     displayuser d;
      cout<<"signin successfull\n";
      switch(res)
      {
          case 3 : g.gov_menu();
                     break;
-        /* case 2: apmc_menu();
-                    break;*/
-         case 1: user_menu();
+         case 2: a.apmc_menu();
+                    break;
+         case 1: d.user_menu(ph);
                     break;
         default:
                 {
@@ -229,53 +330,86 @@ void user::signin()
      cout<<"signin not successfull";
 
  }
-
+system("cls");
 }
 
-void user::user_menu()
-{
 
-}
 
 /*  funactions of goverment */
 
 void gov::load_crop()
 {
-    pos p;
-    crop.clear();
-    ifstream file("mspindex.txt",ios::in);
-    string buf,posbuf;
-    string cname,cpos;
+    data d;
+
+    cropidmap.clear();
+    totalcrop.clear();
+    cropnamemap.clear();
+    fstream file("msp.txt",ios::binary|ios::in);
+    string name,msp,id,position,buffer;
+     int q,i=0;
+     cout<<"in"<<endl;
+
     while(file.good())
     {
-      int q = file.tellg();
-      p.indexpath = to_string(q);
-      getline(file,buf);
+     q = file.tellg();
+     position = to_string(q);
+     getline(file,buffer);
+     if(buffer.length()>0 && buffer[i]!='*')
+     {
+         while(buffer[i]!='|')
+            id+=buffer[i++];
+         i++;
 
-      int i=0;
-      if(buf.length()>0 && buf[i]!='*')
-      {
-        while(buf[i]!='|')
-        cname+=buf[i++];
-      i++;
-         while(buf[i]!='$')
-        posbuf += buf[i++];
+         while(buffer[i]!='|')
+             name+=buffer[i++];
+         i++;
 
-        p.datapos = posbuf;
+         while(buffer[i]!='$')
+             msp+=buffer[i++];
 
-        cout<<cname<<"   ";
+             cout<<id<<"   "<<name<<"   "<<msp<<"    "<<position<<endl;
 
-        crop[cname]=p;
-      }
-        posbuf.erase();
-        cname.erase();
-        buf.erase();
+        d.n=name;
+        d.m=msp;
+
+        cropidmap[id]=position;
+        cropnamemap[name]=msp;
+        totalcrop[id]=d;
+
+     }
+     name.erase();
+     msp.erase();
+     id.erase();
+     position.erase();
+     buffer.erase();
+     i=0;
+    }
+/*
+   for(auto x=cropidmap.cbegin(),y=cropidmap.cend(),m=cropnamemap.crbegin(),n =cropnamemap.cend(); x!=y||m!=n;)
+        {
+                if(x!=y){
+                cout<<x->first<<x->second;
+                ++x;
+                }
+                if(m!=n){
+                cout<<m->first<<m->second;
+                ++m;
+                }
+        }
+   */
+
+/*
+    for(auto x: cropidmap)
+    {
+        cout<<x.first<<"    "<<x.second<<endl;
 
     }
-    for(auto x: crop)
-        cout<<x.first<<"  "<<x.second.indexpath<<endl;
-    file.close();
+    for(auto x: cropnamemap)
+    {
+        cout<<x.first<<"    "<<x.second<<endl;
 
+    }
+*/
 }
 
 void gov::gov_menu()
@@ -333,14 +467,10 @@ void gov::pack(string cname,string msp,string id )
 {
     ofstream file,file1;
     file.open("msp.txt",ios::app | ios::ate);
-    file1.open("mspindex.txt",ios::app);
-    string b =cname + "|" + msp +"$"+"\n";
+    string b =id +"|"+ cname + "|" + msp +"$"+"\n";
     int pos = file.tellp();
     file<<b;
-    string smsp = cname+"|" + to_string(pos)+"$"+"\n";
-    file1<<smsp;
     file.close();
-    file1.close();
 }
 
 void gov::add_crop(){
@@ -351,77 +481,475 @@ void gov::add_crop(){
     cout<<"Enter the MSP\n";
     getline(cin,cropmsp);
 
-    if(!(crop.find(cropname) == crop.end())) 
+    if(!(cropnamemap.find(cropname) == cropnamemap.end())) 
     {
         cout<<"\n\t\t\t Crop already in the list of MSP\n";
     }
     else{
-      pack(cropname,cropmsp);
+      pack(cropname,cropmsp,cropid);
     }
 
 }
 void gov::update_msp(){
-    fstream file1("mspindex.txt",ios::out|ios::in);
-    string name,msp;
-    for(auto x:crop)
-    {
-        cout<<"\n\t\t"<<x.first;
-    }
-    cout<<endl;
-    cout<<"enter the crop name thats MSP to be Updated\n";
-    getline(cin,name);
+      
+      for(auto x: totalcrop)
+        cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m<<endl;
 
-    if((crop.find(name) == crop.end())) 
+    fstream file("mspindex.txt",ios::out|ios::in);
+
+    string id,newmsp;
+
+    cout<<"Enter the id of the Crop thats msp to be updated"<<endl;
+    getline(cin,id);
+
+    if(cropidmap.find(id)==cropidmap.end())
     {
-        cout<<"\n\t\t\t Crop not present in MSP\n";
+        cout<<"Crop is not Present in the MSP list";
     }else{
-     
-     string dps = crop[name].datapos;
-     string ips = crop[name].indexpath;
-     int dp = stoi(dps);
-     int ip = stoi(ips);
+        cout<<"Enter the new MSP"<<endl;
+        getline(cin,newmsp);
 
-     //cout<<file.tellp()<<endl;
-     //file.seekp(dp,ios::beg);
-     //cout<<file.tellp()<<endl;
-     //file.put('*');
-     //cout<<file1.tellp()<<endl;
-     file1.seekp(ip,ios::beg);
-     //cout<<file1.tellp()<<endl;
+        string newcrop = totalcrop[id].n;
+        int oldpos = stoi(cropidmap[id]);
 
-     file1.put('*');
-     file1.seekp(0,ios::beg);
-    //cout<<file1.tellp()<<endl;
-    cout<<"\n\t\t\t Enter the New MSP\n";
-     getline(cin,msp);
-     pack(name,msp);
-     file1.close();
+        file.seekp(oldpos,ios::beg);
+        file.put('*');
 
+        pack(newcrop,newmsp,id);
+
+        file.close();
     }
     
 }
-void gov::update_tax(){}
+void gov::update_tax(){
+
+}
+
+
+/* funcations of the Apmc */
+
+void apmcs::apmc_menu ()
+{
+    gov g;
+    apmcs a;
+    user u("1");
+    displayuser j;
+    j.load_user();
+    
+    g.load_crop();
+
+    cout<<"\n\t\t\t***************************************************";
+	cout<<"\n\t\t\t*             APMC MANAGEMENT SYSTEM              *";
+	cout<<"\n\t\t\t***************************************************";
+
+     string choice;
+    while(choice!="3")
+    {
+        cout<<"\n\t\t\t\t***************************************";
+		cout<<"\n\t\t\t\t************** MAIN MENU *************";
+		cout<<"\n\t\t\t\t**************************************";
+        cout<<"\n\n\n\t\t\t1.Buy Crop";
+		cout<<"\n\t\t\t2.Create User";
+		cout<<"\n\t\t\t3.Exit";
+		cout<<"\n\t\t\t\t";
+        getline(cin,choice);
+        int c = stoi(choice);
+        switch(c)
+        {
+            case 1: a.buycrop();
+                    j.load_user();
+                        break;
+            case 2: u.signup();
+                        break;
+            case 3: return;
+
+            default:
+                    {
+                      cout<<"\n\n\t\t\tWrong choice.....!!!";
+					  cout<<"\n\t\t\tPress enter to continue....!!";
+					  getchar();
+                    }
+        }
+    } 
+
+}
+
+void userin::userin_unpack(int pos)
+{
+     fstream file("userdetile.txt", ios::in |ios::out);
+     string buffer,fid;
+     file.seekp(pos,ios::beg);
+
+     getline(file,buffer);
+
+    int i=0;
+     fid.clear();
+     while(buffer[i]!='|')
+        fid+=buffer[i++];
+    i++;
+     kg.clear();
+    while(buffer[i]!='|')
+        kg+=buffer[i++];
+
+    i++;
+     tax.clear();
+      while(buffer[i]!='|')
+        tax+=buffer[i++];
+    i++;
+    income.clear();
+    while(buffer[i]!='$')
+        income+=buffer[i++];
+   file.close();
+}
+
+void userin::user_delete(int pos)
+{
+    fstream file("userdetileindex.txt",ios::out|ios::in);
+    file.seekp(pos,ios::beg);
+    file.put('*');
+    file.close();
+
+}
+
+   void apmcs::buycrop (){
+       ofstream file,file1,file2;
+       file.open("apmctrans.txt",ios::app);
+       file1.open("userdetile.txt",ios::app | ios::ate);
+       file2.open("userdetileindex.txt",ios::app | ios::ate);
+       user u1;
+       string fid,cropid;
+       cout<<"Enter the Farmer ID\n";
+       getline(cin,fid);
+
+       int res = u1.search(fid);
+
+       if(!res)
+       {
+        cout<<"\n\t\t\tFarmer is not registred yet Please Register Farmer"<<endl;
+         cout<<"\n\t\t\tPress enter to continue....!!";
+		getchar();
+       }
+       else
+       {
+                 for(auto x: totalcrop)
+                    cout<<"\n\t\t\t"<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m<<endl;
+                
+                cout<<"\n\t\t\tEnter the Crop Id that is you want to buy\n";
+                getline(cin,cropid);
+
+                res = stoi(cropidmap[cropid]);
+
+                if(!res)
+                    cout<<"\n\t\t\tCrop entred is not bought here\n";
+                else{
+                    int cropmsp = stoi(totalcrop[cropid].m);
+                    int apmcprice,cropkg;
+
+                    string apprice,kgstring;
+                    cout<<"Enter the Local price of the crop (for quintal)\n";
+                    getline(cin,apprice);
+                    apmcprice = stoi(apprice);
+                    while(apmcprice<cropmsp)
+                    {
+                        cout<<"APMC price is less than MSP\n";
+                        cout<<"Plase enter to give APMC price\n";
+                        getchar();
+                        cout<<"Enter the Local price of the crop\n";
+                        getline(cin,apprice);
+                        apmcprice = stoi(apprice);
+                    }
+                    cout<<"Enter the wight of the crop that farmer sold(in quintal)\n";
+                    getline(cin,kgstring);
+                    cropkg = stoi(kgstring);
+                    int pq = cropkg/100;
+                    int total_crop_price = pq * apmcprice;
+
+                    float total_tax = total_crop_price*0.03;
+
+                    float after_tax = total_crop_price-total_tax;
+
+                    time_t t = time(NULL);
+                    tm* tPtr = localtime(&t);
+                    string today = to_string(tPtr->tm_mday)+"/"+to_string((tPtr->tm_mon)+1)+"/"+to_string((tPtr->tm_year)+1900) ;
+
+                    string addtrans = fid+"|"+today+"|"+totalcrop[cropid].n+"|"+apprice+"|"+kgstring+"|"+to_string(total_crop_price)+"|"+to_string(total_tax)+"|"+to_string(after_tax)+"$"+"\n";
+                    file<<addtrans;
+                    
+                    if(trans_user.find(fid)==trans_user.end())
+                    {
+                        int pos = file1.tellp();
+                        string o =fid+"|"+kgstring+"|"+to_string(total_tax)+"|"+to_string(after_tax)+"$"+"\n";
+                        file1<<o;
+                        string i = fid+"|"+to_string(pos)+"$"+"\n";
+                        file2<<i;    
+                    
+                    }
+                    else{
+                        userin z;
+                        int datapos = stoi(trans_user[fid].datapos);
+                        int indexpos = stoi(trans_user[fid].indexpos);
+                        z.userin_unpack(datapos);
+                        z.user_delete(indexpos);
+                         
+                         int k = cropkg+stoi(z.kg);
+                         int t =total_tax+stoi(z.tax);
+                         int f =after_tax+stoi(z.income);
+
+                        int pos = file1.tellp();
+                        string o =fid+"|"+to_string(k)+"|"+to_string(t)+"|"+to_string(f)+"$"+"\n";
+                        file1<<o;
+                        string i = fid+"|"+to_string(pos)+"$"+"\n";
+                        file2<<i; 
+                        
+                    }
+
+                    file.close();
+                    file1.close();
+                    file2.close();
+
+
+                            cout<<"\n\t\t************************************************************";
+		                    cout<<"\n\t\t\t\t**************** BILL DETILES ****************";
+		                    cout<<"\n\t\t*************************************************************\n";
+
+                            cout<<"Farmer ID:  "<<fid<<endl;
+                            cout << "Current Date: " <<(tPtr->tm_mday)<<"/"<< (tPtr->tm_mon)+1 <<"/"<< (tPtr->tm_year)+1900<< endl;
+                            cout<<"Crop Id that to be Sold:  "<<cropid<<endl;
+                            cout<<"Crop Name that to be Sold: "<<totalcrop[cropid].n<<endl;
+                            cout<<"MSP of the Crop:  "<<cropmsp<<endl;
+                            cout<<"APMC Price of the Crop:  "<<apmcprice<<endl;
+                            cout<<"Total Kg that is sold  "<<cropkg<<endl;
+                            cout<<"Total amount without APMC tax  "<<total_crop_price<<endl;
+                            cout<<"APMC Tax for the Crop  "<<total_tax<<endl;
+                            cout<<"--------------------------------------------------------  "<<endl;
+                            cout<<"\t\tGarand total:  "<<after_tax<<endl;
+
+
+                 cout<<"Tahank you for Visiting\n Please press enter to continue\n";
+                 getchar();
+
+
+
+                }
+
+       }
+
+    }
+
+                    /*Display user funcations*/
+
+  void trans_unpack(string id)
+  {
+      fstream file("apmctrans.txt",ios::in);
+      transaction t;
+      string buffer,fid;
+      int i=0;
+      while(file.good())
+      {
+          getline(file,buffer);
+          if(buffer.length()>0 && buffer[i]!='*')
+          {
+              fid.clear();
+              while(buffer[i]!='|')
+                fid+=buffer[i++];
+              if(!(fid==id))
+                continue;
+              else{
+                  i++;
+                  t.date.clear();
+                while(buffer[i]!='|')
+                    t.date+=buffer[i++];
+                i++;
+                t.crop_name.clear();
+                while(buffer[i]!='|')
+                    t.crop_name+=buffer[i++];
+                i++;
+                t.price.clear();
+                while(buffer[i]!='|')
+                    t.price+=buffer[i++];
+                i++;
+                t.crop_kg.clear();
+                while(buffer[i]!='|')
+                    t.crop_kg+=buffer[i++];
+                i++;
+                t.income_tax.clear();
+                while(buffer[i]!='|')
+                    t.income_tax+=buffer[i++];
+                i++;
+                t.tax.clear();
+                while(buffer[i]!='|')
+                    t.tax+=buffer[i++];
+                i++;
+                t.income.clear();
+                while(buffer[i]!='$')
+                    t.income+=buffer[i++];
+
+                    trans_crop[fid]=t;
+              }
+                    i=0;
+          }
+
+      }
+      
+  }
+
+  void displayuser::load_user()
+  {
+      userdata q;
+      trans_user.clear();
+    fstream file("userdetileindex.txt",ios::binary|ios::in);
+    string buffer,farmerid,posindex,posdata;
+    int p,i=0,m;
+
+    while(file.good())
+    {
+      m = file.tellg();
+      posindex = to_string(m);
+      getline(file,buffer);
+     if(buffer.length()>0 && buffer[i]!='*')
+      {
+             while(buffer[i]!='|')
+              farmerid+=buffer[i++];
+                i++;
+            while(buffer[i]!='$')
+              posdata+=buffer[i++];
+
+              q.datapos = posdata;
+              q.indexpos = posindex;
+
+              trans_user[farmerid]=q;
+      }
+      buffer.clear();
+      posdata.clear();
+      posindex.clear();
+      farmerid.clear();
+      i=0;
+    }
+
+  }
+
+  void displayuser::user_menu(string id)
+  {
+       gov g;
+      apmcs a;
+    
+    g.load_crop();
+
+    cout<<"\n\t\t\t***************************************************";
+	cout<<"\n\t\t\t*             APMC MANAGEMENT SYSTEM              *";
+	cout<<"\n\t\t\t***************************************************";
+
+     string choice;
+    while(choice!="3")
+    {
+        cout<<"\n\t\t\t\t***************************************";
+		cout<<"\n\t\t\t\t************** MAIN MENU *************";
+		cout<<"\n\t\t\t\t**************************************";
+        cout<<"\n\n\n\t\t\t1. Your Report";
+		cout<<"\n\t\t\t2.Know the MSP";
+		cout<<"\n\t\t\t3.Exit";
+		cout<<"\n\t\t\t\t";
+        getline(cin,choice);
+        int c = stoi(choice);
+        switch(c)
+        {
+            case 1: report(id);
+                        break;
+            case 2:  get_msp();
+                        break;
+            case 3: return;
+
+            default:
+                    {
+                      cout<<"\n\n\t\t\tWrong choice.....!!!";
+					  cout<<"\n\t\t\tPress enter to continue....!!";
+					  getchar();
+                    }
+        }
+    } 
+
+  }
+
+  void displayuser::report(string id)
+  {
+      user u;
+      int res = u.search(id);
+      userin v;
+      transaction t;
+      gov g;
+      g.load_crop();
+
+      if(res)
+      {
+
+              cout<<"\n\t\t\t***************************************************";
+	          cout<<"\n\t\t\t*             APMC MANAGEMENT SYSTEM              *";
+	          cout<<"\n\t\t\t***************************************************";
+              cout<<"\n\t\t\t\t***************************************";
+		      cout<<"\n\t\t\t\t************** Your Complete Report *************";
+		      cout<<"\n\t\t\t\t**************************************";
+
+
+		      cout<<"\n\t\t\t\t Farmaer ID:   "<<u.phoneno<<endl;
+		      cout<<"\n\t\t\t\t Farmaer Name:   "<<u.name<<endl;
+		      cout<<"\n\t\t\t\t Farmaer Address:   "<<u.address<<endl;
+
+              if(trans_user.find(id)==trans_user.end())
+              {
+		      cout<<"\n\t\t\t\t Total Crop sold(in quintal):   "<<0<<endl;
+		      cout<<"\n\t\t\t\t Total Tax Paid to APMC:   "<<0<<endl;
+		      cout<<"\n\t\t\t\t Total Income :   "<<0<<endl;
+		      cout<<"\n\t\t\t\t You didnot Sold Any Crop in APMC"<<endl;
+		      cout<<"\n\t\t\t\t Press Enter to continue\n"<<endl;
+              getchar();
+
+                  
+              }else{
+                  int y =stoi(trans_user[id].datapos);
+                  v.userin_unpack(y);
+              cout<<"\n\t\t\t\t Total Crop sold(in quintal):   "<<v.kg<<endl;
+		      cout<<"\n\t\t\t\t Total Tax Paid to APMC:   "<<v.tax<<endl;
+		      cout<<"\n\t\t\t\t Total Income :   "<<v.income<<endl;
+               trans_unpack(u.phoneno);
+              cout<<"\n\t\t\t\tYour Selling Detiles\n";
+
+              for(auto x: trans_crop)
+                cout<<t.date<<"\t\t"<<t.crop_name<<"\t\t"<<t.price<<"\t\t"<<t.crop_kg<<"\t\t"<<t.income_tax<<"\t\t"<<t.tax<<"\t\t"<<t.income<<endl;
+
+              cout<<"Please press enter to exit this Screen"<<endl;
+              getchar();
+
+              }
+
+      }
+  }
+
+  void displayuser::get_msp(){
+      for(auto x: totalcrop)
+        cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m<<endl;
+
+  }
+
+  
 
 
 
 int main()
 {
     user u;
-
-    cout<<"\n\t\t\t***************************************************";
-	cout<<"\n\t\t\t*             APMC MANAGEMENT SYSTEM              *";
-	cout<<"\n\t\t\t***************************************************";
+   system("cls");
  
     string choice;
     while(choice!="3")
     {
-        cout<<"\n\t\t\t\t*************************************************";
-		cout<<"\n\t\t\t\t******************* MAIN MENU *******************";
-		cout<<"\n\t\t\t\t*************************************************";
-        cout<<"\n\n\n\t\t\t1.Login";
-		cout<<"\n\t\t\t2.Register";
-		cout<<"\n\t\t\t3.Exit";
-		cout<<"\n\t\t\t\t";
+               hedder();
+
+        cout<<"\n";
+        menu("MAIN MENU");
+        cout<<"\n\n\n\t\t\t\t\t\t\t     1.Login";
+		cout<<"\n\t\t\t\t\t\t\t     2.Register";
+		cout<<"\n\t\t\t\t\t\t\t     3.Exit";
+		cout<<"\n\n\t\t\t\t\t\t\t\t";
         getline(cin,choice);
         int c = stoi(choice);
         switch(c)
@@ -434,9 +962,10 @@ int main()
 
             default:
                     {
-                      cout<<"\n\n\t\t\tWrong choice.....!!!";
-					  cout<<"\n\t\t\tPress enter to continue....!!";
+                      cout<<"\n\n\t\t\t\t\t\tWrong choice.....!!!";
+					  cout<<"\n\t\t\t\t\t\tPress enter to continue....!!";
 					  getchar();
+                      system("cls");
                     }
         }
     }

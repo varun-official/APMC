@@ -1,0 +1,11 @@
+1001|paddy|1975$
+1002|ragi|3377$
+1003|moong|7275$
+1003|moong|7250$
+1002|ragi|3380$
+1004|jowar|2779$
+1005|urad|6300$
+1006|cotton|6025$
+1007|groundnut|5550$
+1008|sunflower seed|6015$
+1008|sunflower seed|6018$
