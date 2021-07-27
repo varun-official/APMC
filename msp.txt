@@ -9,3 +9,14 @@
 1007|groundnut|5550$
 1008|sunflower seed|6015$
 1008|sunflower seed|6018$
+110|coconut|350$
+111|arecanut|40000$
+112|banana|2600$
+113|tur|6300$
+110|coconut|3500$
+115|coco|2400$
+116|maize|1870$
+117|balra|2250$
+115|coco|2500$
+115|coco|2400$
+117|balra|2300$

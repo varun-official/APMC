@@ -141,6 +141,20 @@ void menu(string str)
 
 }
 
+void setline(int num){
+  for(int i = 0; i < num; i++)
+    cout << endl;
+}
+
+void putSpace(int num){
+   for(int i = 0; i < num; i++)
+          cout << " ";
+}
+void paddedOutput(string s,int padding,int underline = 0){
+    putSpace(padding);
+    cout << s;
+}
+
 
 map<string,string> cropnamemap;
 map<string,string> cropidmap;
@@ -220,8 +234,6 @@ int user::isuser(string key1,string key2)
             int p = (key1==phoneno);
             int q = (key2==password);
 
-            cout<<role<<endl;
-
             if(p=q==1)
                 return stoi(role);
 
@@ -233,7 +245,6 @@ int user::isuser(string key1,string key2)
 
         }
 
-
     }
             file.close();
     return 0;
@@ -241,24 +252,49 @@ int user::isuser(string key1,string key2)
 
 void user::signup()
 {
+
+    system("cls");
+    hedder();
+    menu("SignUp Page");
+
     string ph,na,add,pass;
     ofstream file;
     file.open("user.txt",ios::app);
-  cout<<"Enter the phone number\n";
+    setline(3);
+    putSpace(55);
+  cout<<"Enter the phone number:";
+  putSpace(2);
   getline(cin,ph);
-  cout<<"Enter the name\n";
+      setline(2);
+    putSpace(55);
+  cout<<"Enter the name:";
+  putSpace(2);
   getline(cin,na);
-  cout<<"Enter the Address\n";
+        setline(2);
+    putSpace(55);
+  cout<<"Enter the Address:";
+  putSpace(2);
   getline(cin,add);
-  cout<<"Enter the Password\n";
+        setline(2);
+    putSpace(55);
+  cout<<"Enter the Password:";
+  putSpace(2);
   getline(cin,pass);
   int res = search(ph) ;
-  cout<<res<<endl;
+
+    system("cls");
+    hedder();
+    menu("SignUp Page");
 
   if(res)
   {
-      cout<<"\n\t\t\t Signup is unsuccessful";
-      cout<<"\n\t\t\t User already exsits";
+          setline(3);
+    putSpace(55);
+      cout<<"SignUp is unsuccessful";
+          setline(1);
+    putSpace(55);
+      cout<<"User already exits";
+      Sleep(2000);
 
   }
   else
@@ -271,10 +307,17 @@ void user::signup()
       pack();
       file<<buffer;
       buffer.erase();
-      file.close();
-      cout<<"\n\t\t\t Signup is successful";
-      cout<<"\n\n\t\t\t Press enter to login";
+      file.close();         
+       setline(3);
+      putSpace(57);
+
+      cout<<"SignUp is successful\n";
+            putSpace(57);
+      cout<<"Press enter to login";
+            putSpace(2);
+
       getchar();
+      system("cls");
   }
 }
 
@@ -282,25 +325,33 @@ void user::signin()
 {
     system("cls");
     hedder();
-    menu("LOGIN MENU");
+    menu("LOGIN Page");
     string ph,pass;
-  cout<<"\n\n\t\t\t\t\t\t\tEnter the phone number:\n";
-   cout<<"\n\t\t\t\t\t\t\t   ";
+    setline(3);
+    putSpace(55);
+  cout<<"Enter the phone number:";
+  putSpace(2);
   getline(cin,ph);
-  cout<<"\n\t\t\t\t\t\t\tEnter the Password:\n";
-  cout<<"\n\t\t\t\t\t\t\t      ";
+  setline(2);
+  putSpace(55);
+  cout<<"Enter the Password:";
+  putSpace(2);
   getline(cin,pass);
 
   int isregisrter = search(ph);
 
   if(!isregisrter)
   {
-          system("cls");
+    system("cls");
     hedder();
     menu("LOGIN MENU");
-      cout<<"\n\n\t\t\t\t\t\t       User is Not registred Yet";
-      cout<<"\n\n\t\t\t\t\t\t       Press enter to register....!";
-      getchar();
+    setline(3);
+    putSpace(50);
+    cout<<"User is Not registred Yet";
+    setline(2);
+    putSpace(50);
+    cout<<"Press enter to register....!";
+    getchar();
   }
  int res = isuser(ph,pass);
 
@@ -309,14 +360,23 @@ void user::signin()
      gov g;
      apmcs a;
      displayuser d;
-     cout<<"signin successfull\n";
+    system("cls");
+    hedder();
+    menu("LOGIN MENU");
+    setline(3);
+     putSpace(57);
+     cout<<"SignIn successfull\n";
+     Sleep(3000);
      switch(res)
      {
-         case 3 : g.gov_menu();
+         case 3 : system("cls");
+                  g.gov_menu();
                     break;
-         case 2: a.apmc_menu();
+         case 2:   system("cls");
+                    a.apmc_menu();
                     break;
-         case 1: d.user_menu(ph);
+         case 1:    system("cls");
+                    d.user_menu(ph);
                     break;
         default:
                 {
@@ -330,7 +390,6 @@ void user::signin()
      cout<<"signin not successfull";
 
  }
-system("cls");
 }
 
 
@@ -347,7 +406,6 @@ void gov::load_crop()
     fstream file("msp.txt",ios::binary|ios::in);
     string name,msp,id,position,buffer;
      int q,i=0;
-     cout<<"in"<<endl;
 
     while(file.good())
     {
@@ -367,7 +425,6 @@ void gov::load_crop()
          while(buffer[i]!='$')
              msp+=buffer[i++];
 
-             cout<<id<<"   "<<name<<"   "<<msp<<"    "<<position<<endl;
 
         d.n=name;
         d.m=msp;
@@ -417,25 +474,33 @@ void gov::gov_menu()
 
     gov g;
     user u("2");
-                    g.load_crop();
-
-
-    cout<<"\n\t\t\t***************************************************";
-	cout<<"\n\t\t\t*             APMC MANAGEMENT SYSTEM              *";
-	cout<<"\n\t\t\t***************************************************";
+    g.load_crop();
 
      string choice;
     while(choice!="3")
     {
-        cout<<"\n\t\t\t\t***************************************";
-		cout<<"\n\t\t\t\t************** MAIN MENU *************";
-		cout<<"\n\t\t\t\t**************************************";
-        cout<<"\n\n\n\t\t\t1.Add Crop";
-		cout<<"\n\t\t\t2.Upadte MSP";
-		cout<<"\n\t\t\t3.Update Tax";
-		cout<<"\n\t\t\t4.Create APMC";
-		cout<<"\n\t\t\t5.Exit";
-		cout<<"\n\t\t\t\t";
+        system("cls");
+        hedder();
+        cout<<"\n\t\t\t\t\t     +++++++++++Government DashBoard +++++++++++\n";
+        setline(3);
+        putSpace(60);
+        cout<<"1.Add Crop";
+        setline(1);
+        putSpace(60);
+		cout<<"2.Upadte MSP";
+                setline(1);
+        putSpace(60);
+		cout<<"3.Update Tax";
+                setline(1);
+        putSpace(60);
+		cout<<"4.Create APMC";
+                setline(1);
+        putSpace(60);
+		cout<<"5.SignOut";
+                setline(2);
+        putSpace(60);
+		  cout<<"Enter the choice:";
+          putSpace(2);
         getline(cin,choice);
         int c = stoi(choice);
         switch(c)
@@ -450,7 +515,8 @@ void gov::gov_menu()
                         break;
             case 4: u.signup();
                         break;
-            case 5: return;
+            case 5: system("cls");
+                    return;
 
             default:
                     {
@@ -460,6 +526,7 @@ void gov::gov_menu()
                     }
         }
     } 
+    system("cls");
 
 }
 
@@ -474,40 +541,90 @@ void gov::pack(string cname,string msp,string id )
 }
 
 void gov::add_crop(){
-    cout<<"Enter the Crop ID:\n";
+      system("cls");
+      hedder();
+      cout<<"\n\t\t\t\t\t     +++++++++++Add Crop Details +++++++++++\n";
+
+    setline(3);
+    putSpace(55);
+    cout<<"Enter the Crop ID:";
+    putSpace(2);
     getline(cin,cropid);
-    cout<<"Enter the Crop name:\n";
+
+    setline(2);
+    putSpace(55);
+    cout<<"Enter the Crop name:";
+    putSpace(2);
     getline(cin,cropname);
-    cout<<"Enter the MSP\n";
+
+    setline(2);
+    putSpace(55);
+    cout<<"Enter the MSP:";
+    putSpace(2);
     getline(cin,cropmsp);
+
+      system("cls");
+      hedder();
+      cout<<"\n\t\t\t\t\t     +++++++++++Add Crop Details +++++++++++\n";
 
     if(!(cropnamemap.find(cropname) == cropnamemap.end())) 
     {
-        cout<<"\n\t\t\t Crop already in the list of MSP\n";
+        setline(3);
+        putSpace(52);
+        cout<<"Crop already in the list of MSP\n";
+        Sleep(2000);
     }
     else{
       pack(cropname,cropmsp,cropid);
+      setline(3);
+      putSpace(52);
+      cout<<"Crop Added to the list of MSP\n";
+      Sleep(2000);
     }
 
 }
 void gov::update_msp(){
+        system("cls");
+        hedder();
+        cout<<"\n\t\t\t\t\t     +++++++++++Update MSP Price +++++++++++\n";
+
+        setline(2);
       
       for(auto x: totalcrop)
-        cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m<<endl;
+      {
+        putSpace(42);
+        cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m;
+        setline(1);
+
+      }
 
     fstream file("mspindex.txt",ios::out|ios::in);
 
     string id,newmsp;
-
-    cout<<"Enter the id of the Crop thats msp to be updated"<<endl;
-    getline(cin,id);
+     setline(3);
+     putSpace(19);
+     cout<<"\n\n\t\t\t\t\t Enter the id of the Crop thats msp to be updated:";
+     putSpace(2);
+     getline(cin,id);
 
     if(cropidmap.find(id)==cropidmap.end())
     {
-        cout<<"Crop is not Present in the MSP list";
-    }else{
-        cout<<"Enter the new MSP"<<endl;
-        getline(cin,newmsp);
+        system("cls");
+        hedder();
+        cout<<"\n\t\t\t\t\t     +++++++++++Update MSP Price +++++++++++\n";
+
+        setline(3);
+         putSpace(30);
+        cout<<"Crop is not Present in the MSP list:";
+        Sleep(2000);
+    }
+    else
+    {
+         setline(3);
+         putSpace(55);
+         cout<<"Enter the new MSP";
+         putSpace(2);
+         getline(cin,newmsp);
 
         string newcrop = totalcrop[id].n;
         int oldpos = stoi(cropidmap[id]);
@@ -518,6 +635,16 @@ void gov::update_msp(){
         pack(newcrop,newmsp,id);
 
         file.close();
+
+        system("cls");
+        hedder();
+        cout<<"\n\t\t\t\t\t     +++++++++++Update MSP Price +++++++++++\n";
+
+        setline(3);
+        putSpace(57);
+        cout<<"MSP is Updated"<<endl;
+        Sleep(2000);
+
     }
     
 }
@@ -949,7 +1076,10 @@ int main()
         cout<<"\n\n\n\t\t\t\t\t\t\t     1.Login";
 		cout<<"\n\t\t\t\t\t\t\t     2.Register";
 		cout<<"\n\t\t\t\t\t\t\t     3.Exit";
-		cout<<"\n\n\t\t\t\t\t\t\t\t";
+        setline(2);
+         putSpace(58);
+        cout<<"Enter the choice:";
+         putSpace(2);
         getline(cin,choice);
         int c = stoi(choice);
         switch(c)
