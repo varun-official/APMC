@@ -20,3 +20,5 @@
 115|coco|2500$
 115|coco|2400$
 117|balra|2300$
+119|black pepper|35000$
+119|black pepper|36000$
