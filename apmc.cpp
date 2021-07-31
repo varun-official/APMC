@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 #include<windows.h>
+#include "VariadicTable.h"
 using namespace std;
 COORD coord = {0, 0};
 void gotoxy (int x, int y)	
@@ -10,35 +11,35 @@ void gotoxy (int x, int y)
 }
 class user
 {
-public:
-    string phoneno;
-    string name;
-    string address;
-    string password;
-    string buffer;
-    string role;
-    string temprole;
+    public:
+        string phoneno;
+        string name;
+        string address;
+        string password;
+        string buffer;
+        string role;
+        string temprole;
 
-    user()
-    {
-        role ="1";
-        temprole=role;
-    }
+        user()
+        {
+            role ="1";
+            temprole=role;
+        }
 
-    user(string r)
-    {
-        role = r;
-        temprole=role;
+        user(string r)
+        {
+            role = r;
+            temprole=role;
 
-    }
+        }
 
-    void signup();
-    void signin();
-    int search(string key);
-    int isuser(string key1,string key2);
-    void unpack();
-    void pack();
-    void user_menu();
+        void signup();
+        void signin();
+        int search(string key);
+        int isuser(string key1,string key2);
+        void unpack();
+        void pack();
+        void user_menu();
 };
 
 class gov
@@ -61,39 +62,39 @@ class gov
 class data
 {
     public:
-     string n;
-     string m;
+        string n;
+        string m;
 };
 
 class userdata
 {
     public:
-   string datapos;
-   string indexpos;
+        string datapos;
+        string indexpos;
 };
 
 class apmcs
 {
     public:
-        void apmc_menu();
-        void buycrop();
+        void apmc_menu(string);
+        void buycrop(string);
 };
 
 class displayuser
 {
     public:
-    string phoneno;
-    string name;
-    string address;
-    string total_kg;
-    string no_crop;
-    string total_tax;
-    string income;
+        string phoneno;
+        string name;
+        string address;
+        string total_kg;
+        string no_crop;
+        string total_tax;
+        string income;
 
-    void user_menu(string);
-    void report(string);
-    void get_msp();
-    void load_user();
+        void user_menu(string);
+        void report(string);
+        void get_msp();
+        void load_user();
 
 };
 
@@ -112,13 +113,14 @@ class userin
 class transaction
 {
     public:
-    string date;
-    string crop_name;
-    string price;
-    string crop_kg;
-    string income_tax;
-    string tax;
-    string income;
+        string date;
+        string crop_name;
+        string price;
+        string crop_kg;
+        string income_tax;
+        string tax;
+        string income;
+        string address;
 
 
 };
@@ -132,13 +134,11 @@ void hedder()
 	cout<<"\n\t\t\t\t\t***************************************************";   
     cout<<endl;
     cout<<endl;
-
 }
 
 void menu(string str)
 {
 		cout<<"\n\t\t\t\t\t\t++++++++++++ "<<str<<" ++++++++++++\n";
-
 }
 
 void setline(int num){
@@ -160,7 +160,6 @@ map<string,string> cropnamemap;
 map<string,string> cropidmap;
 map<string,data> totalcrop;
 map<string,userdata>trans_user;
-//map<string,transaction>trans_crop;
 vector<transaction> trans_crop;
 
 /* funcations of the use */
@@ -176,22 +175,27 @@ void user:: unpack()
    phoneno.erase();
    while(buffer[i]!='|')
         phoneno+=buffer[i++];
+
     i++;
     name.erase();
     while(buffer[i]!='|')
         name+=buffer[i++];
+
     i++;
     address.erase();
     while(buffer[i]!='|')
         address+=buffer[i++];
+
     i++;
     password.erase();
     while(buffer[i]!='|')
         password+=buffer[i++];
+
     i++;
     role.erase();
     while(buffer[i]!='$')
         role+=buffer[i++];
+
 }
 int user::search(string key)
 {
@@ -215,7 +219,6 @@ int user::search(string key)
         {
             file.close();
             return 1;
-
         }
     }
     file.close();
@@ -251,6 +254,7 @@ int user::isuser(string key1,string key2)
     return 0;
 }
 
+
 void user::signup()
 {
 
@@ -262,26 +266,26 @@ void user::signup()
     ofstream file;
     file.open("user.txt",ios::app);
     setline(3);
-    putSpace(55);
-  cout<<"Enter the phone number:";
-  putSpace(2);
-  getline(cin,ph);
-      setline(2);
-    putSpace(55);
-  cout<<"Enter the name:";
-  putSpace(2);
-  getline(cin,na);
-        setline(2);
-    putSpace(55);
-  cout<<"Enter the Address:";
-  putSpace(2);
-  getline(cin,add);
-        setline(2);
-    putSpace(55);
-  cout<<"Enter the Password:";
-  putSpace(2);
-  getline(cin,pass);
-  int res = search(ph) ;
+    putSpace(50);
+    cout<<"Enter the phone number:";
+    putSpace(2);
+    getline(cin,ph);
+    setline(2);
+    putSpace(50);
+    cout<<"Enter the name:";
+    putSpace(10);
+    getline(cin,na);
+    setline(2);
+    putSpace(50);
+    cout<<"Enter the Address:";
+    putSpace(7);
+    getline(cin,add);
+    setline(2);
+    putSpace(50);
+    cout<<"Enter the Password:";
+    putSpace(6);
+    getline(cin,pass);
+    int res = search(ph) ;
 
     system("cls");
     hedder();
@@ -289,13 +293,13 @@ void user::signup()
 
   if(res)
   {
-          setline(3);
+    setline(3);
     putSpace(55);
-      cout<<"SignUp is unsuccessful";
-          setline(1);
+    cout<<"SignUp is unsuccessful";
+    setline(3);
     putSpace(55);
-      cout<<"User already exits";
-      Sleep(2000);
+    cout<<"User already exits";
+    Sleep(2000);
 
   }
   else
@@ -309,13 +313,14 @@ void user::signup()
       file<<buffer;
       buffer.erase();
       file.close();         
-       setline(3);
+      setline(3);
       putSpace(57);
 
       cout<<"SignUp is successful\n";
-            putSpace(57);
+      setline(2);
+      putSpace(57);
       cout<<"Press enter to login";
-            putSpace(2);
+      putSpace(2);
 
       getchar();
       system("cls");
@@ -329,17 +334,17 @@ void user::signin()
     menu("LOGIN Page");
     string ph,pass;
     setline(3);
-    putSpace(55);
-  cout<<"Enter the phone number:";
-  putSpace(2);
-  getline(cin,ph);
-  setline(2);
-  putSpace(55);
-  cout<<"Enter the Password:";
-  putSpace(2);
-  getline(cin,pass);
+    putSpace(49);
+    cout<<"Enter the phone number:";
+    putSpace(2);
+    getline(cin,ph);
+    setline(2);
+    putSpace(49);
+    cout<<"Enter the Password:";
+    putSpace(6);
+    getline(cin,pass);
 
-  int isregisrter = search(ph);
+    int isregisrter = search(ph);
 
   if(!isregisrter)
   {
@@ -354,6 +359,7 @@ void user::signin()
     cout<<"Press enter to register....!";
     getchar();
   }
+  
  int res = isuser(ph,pass);
 
  if(res)
@@ -374,7 +380,7 @@ void user::signin()
                   g.gov_menu();
                     break;
          case 2:   system("cls");
-                    a.apmc_menu();
+                    a.apmc_menu(ph);
                     break;
          case 1:    system("cls");
                     d.user_menu(ph);
@@ -388,7 +394,7 @@ void user::signin()
                 }
      }
  }else{
-     cout<<"signin not successfull";
+     cout<<"SignIn not successfull";
 
  }
 }
@@ -442,32 +448,7 @@ void gov::load_crop()
      buffer.erase();
      i=0;
     }
-/*
-   for(auto x=cropidmap.cbegin(),y=cropidmap.cend(),m=cropnamemap.crbegin(),n =cropnamemap.cend(); x!=y||m!=n;)
-        {
-                if(x!=y){
-                cout<<x->first<<x->second;
-                ++x;
-                }
-                if(m!=n){
-                cout<<m->first<<m->second;
-                ++m;
-                }
-        }
-   */
 
-/*
-    for(auto x: cropidmap)
-    {
-        cout<<x.first<<"    "<<x.second<<endl;
-
-    }
-    for(auto x: cropnamemap)
-    {
-        cout<<x.first<<"    "<<x.second<<endl;
-
-    }
-*/
 }
 
 void gov::gov_menu()
@@ -482,26 +463,26 @@ void gov::gov_menu()
     {
         system("cls");
         hedder();
-        cout<<"\n\t\t\t\t\t     +++++++++++Government DashBoard +++++++++++\n";
+        cout<<"\n\t\t\t\t\t    +++++++++++Government DashBoard +++++++++++\n";
         setline(3);
         putSpace(60);
         cout<<"1.Add Crop";
-        setline(1);
+        setline(2);
         putSpace(60);
 		cout<<"2.Upadte MSP";
-                setline(1);
+        setline(2);
         putSpace(60);
-		cout<<"3.Update Tax";
-                setline(1);
+		cout<<"3.Show MSP";
+        setline(2);
         putSpace(60);
 		cout<<"4.Create APMC";
-                setline(1);
+        setline(2);
         putSpace(60);
 		cout<<"5.SignOut";
-                setline(2);
-        putSpace(60);
-		  cout<<"Enter the choice:";
-          putSpace(2);
+        setline(2);
+        putSpace(56);
+		cout<<"Enter the choice:";
+        putSpace(2);
         getline(cin,choice);
         int c = stoi(choice);
         switch(c)
@@ -531,6 +512,33 @@ void gov::gov_menu()
 
 }
 
+void showMsp()
+{
+
+      fstream filed;
+      filed.open("dummy.txt",ios::out);
+      VariadicTable<string, string, string> vt({"CropId", "CropName", "MSP"});
+
+      for(auto x: totalcrop)
+      {
+        vt.addRow(x.first, x.second.n, x.second.m);
+      }
+      vt.print(filed);
+      filed.close();
+
+    fstream filei("dummy.txt",ios::in);
+    string row;
+
+    while(filei.good())
+    {
+        getline(filei,row);
+        putSpace(47);
+        cout<<row;
+        setline(1);
+    }
+
+}
+
 void gov::pack(string cname,string msp,string id )
 {
     ofstream file,file1;
@@ -547,21 +555,21 @@ void gov::add_crop(){
       cout<<"\n\t\t\t\t\t     +++++++++++Add Crop Details +++++++++++\n";
 
     setline(3);
-    putSpace(55);
+    putSpace(52);
     cout<<"Enter the Crop ID:";
-    putSpace(2);
+    putSpace(4);
     getline(cin,cropid);
 
     setline(2);
-    putSpace(55);
+    putSpace(52);
     cout<<"Enter the Crop name:";
     putSpace(2);
     getline(cin,cropname);
 
     setline(2);
-    putSpace(55);
+    putSpace(53);
     cout<<"Enter the MSP:";
-    putSpace(2);
+    putSpace(8);
     getline(cin,cropmsp);
 
       system("cls");
@@ -590,19 +598,13 @@ void gov::update_msp(){
         cout<<"\n\t\t\t\t\t     +++++++++++Update MSP Price +++++++++++\n";
 
         setline(2);
-      
-      for(auto x: totalcrop)
-      {
-        putSpace(42);
-        cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m;
-        setline(1);
-
-      }
+       
+       showMsp();
 
     fstream file("mspindex.txt",ios::out|ios::in);
 
     string id,newmsp;
-     setline(3);
+     setline(1);
      putSpace(19);
      cout<<"\n\n\t\t\t\t\t Enter the id of the Crop thats msp to be updated:";
      putSpace(2);
@@ -649,14 +651,24 @@ void gov::update_msp(){
     }
     
 }
-void gov::update_tax(){
 
+
+
+void gov::update_tax(){
+    system("cls");
+    hedder();
+    menu("MSP List");
+    showMsp();
+    setline(2);
+    putSpace(55);
+    cout<<"Press Enter to continue";
+    getchar();
 }
 
 
 /* funcations of the Apmc */
 
-void apmcs::apmc_menu ()
+void apmcs::apmc_menu (string uuid)
 {
     gov g;
     apmcs a;
@@ -683,9 +695,12 @@ void apmcs::apmc_menu ()
 		cout<<"2.Create User";
         setline(2);
         putSpace(60);
-		cout<<"3.Exit";
+		cout<<"3.Show MSP";
         setline(2);
         putSpace(60);
+		cout<<"4.Exit";
+        setline(2);
+        putSpace(56);
 		cout<<"Enter the Choice:";
         putSpace(2);
         getline(cin,choice);
@@ -695,12 +710,15 @@ void apmcs::apmc_menu ()
 
         switch(c)
         {
-            case 1: a.buycrop();
+            case 1: a.buycrop(uuid);
                     j.load_user();
                         break;
             case 2: u.signup();
                         break;
-            case 3: return;
+            case 3: g.update_tax();
+                    break;
+
+            case 4: return;
 
             default:
                     {
@@ -752,7 +770,7 @@ void userin::user_delete(int pos)
 
 }
 
-   void apmcs::buycrop (){
+   void apmcs::buycrop (string uuid){
 
         system("cls");
         hedder();
@@ -764,6 +782,7 @@ void userin::user_delete(int pos)
        file1.open("userdetile.txt",ios::app | ios::ate);
        file2.open("userdetileindex.txt",ios::app | ios::ate);
        user u1;
+       user u2;
        string fid,cropid;
        setline(3);
        putSpace(55);
@@ -772,7 +791,7 @@ void userin::user_delete(int pos)
        getline(cin,fid);
 
        int res = u1.search(fid);
-
+       int res1 = u2.search(uuid);
        if(!res)
        {
                 system("cls");
@@ -795,12 +814,8 @@ void userin::user_delete(int pos)
                 menu("Buy Crop");
 
                 setline(3);
-                 for(auto x: totalcrop)
-                 {
-                    putSpace(50);
-                    cout<<x.first<<"\t\t"<<x.second.n<<"\t\t"<<x.second.m<<endl;
-
-                 }
+                
+                showMsp();
 
                  setline(3);
                     putSpace(40);
@@ -877,7 +892,7 @@ void userin::user_delete(int pos)
                     tm* tPtr = localtime(&t);
                     string today = to_string(tPtr->tm_mday)+"/"+to_string((tPtr->tm_mon)+1)+"/"+to_string((tPtr->tm_year)+1900) ;
 
-                    string addtrans = fid+"|"+today+"|"+totalcrop[cropid].n+"|"+apprice+"|"+kgstring+"|"+to_string(total_crop_price)+"|"+to_string(total_tax)+"|"+to_string(after_tax)+"$"+"\n";
+                    string addtrans = fid+"|"+today+"|"+totalcrop[cropid].n+"|"+apprice+"|"+kgstring+"|"+to_string(total_crop_price)+"|"+to_string(total_tax)+"|"+to_string(after_tax)+"|"+u2.address+"$"+"\n";
                     file<<addtrans;
                     
                     if(trans_user.find(fid)==trans_user.end())
@@ -1019,8 +1034,12 @@ void userin::user_delete(int pos)
                     t.tax+=buffer[i++];
                 i++;
                 t.income.clear();
-                while(buffer[i]!='$')
+                while(buffer[i]!='|')
                     t.income+=buffer[i++];
+                i++;
+                t.address.clear();
+                while(buffer[i]!='$')
+                    t.address+=buffer[i++];
 
                     if(fid==id){
                         trans_crop.push_back(t);
@@ -1100,7 +1119,7 @@ void userin::user_delete(int pos)
         {
             case 1: report(id);
                         break;
-            case 2:  get_msp();
+            case 2:  g.update_tax();
                         break;
             case 3: system("cls");
                     return;
@@ -1133,15 +1152,15 @@ void userin::user_delete(int pos)
               menu("Your Transcation");
 
               setline(3);
-              putSpace(55);
+              putSpace(50);
 		      cout<<"Farmer ID:   ";
               putSpace(18);
               cout<<u.phoneno<<endl;
-              putSpace(55);
+              putSpace(50);
 		      cout<<"Farmer Name:   ";
               putSpace(16);
               cout<<u.name<<endl;
-              putSpace(55);
+              putSpace(50);
 		      cout<<"Farmer Address:   ";
               putSpace(13);
 
@@ -1150,23 +1169,23 @@ void userin::user_delete(int pos)
               if(trans_user.find(id)==trans_user.end())
               {
 		      setline(1);
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Crop sold(in quintal):   ";
                     cout<<0<<endl;
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Tax Paid to APMC:   ";
                     putSpace(6);
                     cout<<0<<endl;
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Income :   ";
                     putSpace(14);
                     cout<<0.000<<endl;
 
                 setline(3);
-                putSpace(55);
+                putSpace(50);
 		      cout<<"You didnot Sold Any Crop in APMC"<<endl;
               setline(1);
-                putSpace(55);
+                putSpace(50);
 		      cout<<"Press Enter to continue";
               putSpace(3);
               getchar();
@@ -1175,14 +1194,14 @@ void userin::user_delete(int pos)
               }else{
                     int y =stoi(trans_user[id].datapos);
                     v.userin_unpack(y);
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Crop sold(in quintal):   ";
                     cout<<v.kg<<endl;
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Tax Paid to APMC:   ";
                     putSpace(5);
                     cout<<v.tax<<endl;
-                     putSpace(55);
+                     putSpace(50);
                     cout<<"Total Income :   ";
                     putSpace(14);
                     cout<<v.income<<endl;
@@ -1193,8 +1212,30 @@ void userin::user_delete(int pos)
               menu("Your Transcation Detaies");
 
               setline(2);
-              for(auto x: trans_crop)
-                cout<<x.date<<"\t"<<x.crop_name<<"\t"<<x.price<<"\t"<<x.crop_kg<<"\t"<<x.income_tax<<"\t"<<x.tax<<"\t"<<x.income<<endl;
+              
+             fstream filed;
+             filed.open("dummy_trans.txt",ios::out);
+            VariadicTable<string,string, string, string,string,string,string,string> vt({"Date", "APMC Name", "Crop Name","Price","Quantity","Total Revenue","APMC Tax","Net Revenue"});
+
+            for(auto x: trans_crop)
+            {
+                vt.addRow(x.date,x.address,x.crop_name,x.price,x.crop_kg,x.income_tax,x.tax,x.income);
+            }
+            vt.print(filed);
+            filed.close();
+
+                fstream filei("dummy_trans.txt",ios::in);
+                string row;
+
+                while(filei.good())
+                {
+                    getline(filei,row);
+                    putSpace(25);
+                    cout<<row;
+                    setline(1);
+                }
+
+
 
                setline(3);
                putSpace(55);
@@ -1229,10 +1270,10 @@ int main()
         cout<<"\n";
         menu("MAIN MENU");
         cout<<"\n\n\n\t\t\t\t\t\t\t     1.Login";
-		cout<<"\n\t\t\t\t\t\t\t     2.Register";
-		cout<<"\n\t\t\t\t\t\t\t     3.Exit";
-        setline(2);
-         putSpace(58);
+		cout<<"\n\n\t\t\t\t\t\t\t     2.Register";
+		cout<<"\n\n\t\t\t\t\t\t\t     3.Exit";
+        setline(3);
+         putSpace(56);
         cout<<"Enter the choice:";
          putSpace(2);
         getline(cin,choice);

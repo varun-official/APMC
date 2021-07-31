@@ -22,3 +22,10 @@
 117|balra|2300$
 119|black pepper|35000$
 119|black pepper|36000$
+2000|alakki|2000$
+2001|mango|6000$
+2003|jayekaye|5000$
+2003|jayekaye|4450$
+2003|jayekaye|5000$
+3000|ambate|1000$
+3000|ambate|999$

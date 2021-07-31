@@ -6,3 +6,6 @@
 7654321098|sham|puttur|puttur|1$
 6543210987|rajath|bc road|rajath|1$
 5432109876|raj|mangalore|raj|1$
+1234567890|praddep|puttur|puttur|1$
+2345678901|abc|abc|abc|1$
+3456789012|xyz|xyz|xyz|1$
